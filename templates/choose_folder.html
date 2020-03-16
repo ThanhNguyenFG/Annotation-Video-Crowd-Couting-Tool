@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>UPLOAD</title>
+	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/choose_folder.css') }}">
+</head>
+
+<body>
+	<div class="form">
+	    <form class="upload_form" method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+	            <input class="button" type="file" name="files[]" id="files" multiple directory="" webkitdirectory="" mozdirectory=""><br/>
+	        <input class="button" type="submit" value="UPLOAD" name="upload" />
+	    </form>
+	</div>
+</body>
+</html>
+

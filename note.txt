@@ -1,0 +1,12 @@
+user có những lựa chọn:
+	thêm 1 điểm 
+	xoá một điểm và những phần match phía sau nó
+		
+	xoá một điểm và những phần match phía trước nó
+		
+	di chuyển 1 điểm
+		curr_point và move_point
+		
+	match 1 điểm với một điểm trong frame liền kề
+		curr_point và match_point
+		

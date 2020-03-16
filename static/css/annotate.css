@@ -1,0 +1,51 @@
+ul.list_img {
+	margin: 0;
+	padding: 5px;
+	display: flex;
+	flex-direction: row;
+	width: 90vw;
+	height: 150px;
+	overflow-x: auto;
+}
+
+ul.list_img li {
+  display: inline-block;
+  padding: 5px;
+  width: 100px;
+  height: 100px;
+}
+
+.img {
+	max-width: 100px;
+}
+
+.submit {
+	border-radius: 5px;
+	width: 200px;
+	height: 50px;
+	margin: 50px 10px;
+}
+
+.menu_button {
+	border-radius: 5px;
+	width: 200px;
+	height: 50px;
+	margin: 10px;
+}
+
+.img_button {
+	border-radius:  2px;
+	width: 100px;
+}
+
+.div_menu_button {
+	padding: 30px;
+}
+
+.table_process {
+	padding: 10px;
+}
+
+.active {
+	background-color: #FF8C00;
+}

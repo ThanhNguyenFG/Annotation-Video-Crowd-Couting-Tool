@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ANNOTATE</title>
+	<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/annotate.css') }}">
+</head>
+
+<body onload="load();">
+	<table class="table_process" style="width: 500px;">
+		<tr>
+			<td width="50%">
+				<img id="img1" class="process_img" src="{{url_for('send_image', folder_name = 'NULL', file_name = pre_file_name)}}" style="width: 500px;">
+			</td>
+			
+			<td width="50%">
+				<img id="img2" class="process_img" src="{{url_for('send_image', folder_name = 'NULL', file_name = file_name)}}" style="width: 500px;">
+			</td>
+			<td>
+				<div class="div_menu_button">
+					{% if action != 'NULL' %}
+						{% if action != 'ADD' %}
+							{% if action != 'MOVE' %}
+								<input class="submit" type="submit" onclick="window.location.href='{{url_for('annotate_action', folder_name = folder_name, file_name = file_name, action = action)}}';" value="SUBMIT">
+							{% endif %}
+						{% endif %}
+					{% endif %}
+					{% if action == 'ADD' %}
+						<button id="ADD" class="menu_button active" value="ADD" onclick='submitAction("ADD")'>ADD</button>
+						<button id="MATCH" class="menu_button" value="MATCH" onclick='submitAction("MATCH")'>MATCH</button>
+						<button id="MOVE" class="menu_button" value="MOVE" onclick='submitAction("MOVE")'>MOVE</button>
+						<button id="DELETE_BEFORE" class="menu_button" value="DELETE_BEFORE" onclick='submitAction("DELETE_BEFORE")'>DELETE BEFORE</button>
+						<button id="DELETE_AFTER" class="menu_button" value="DELETE_AFTER" onclick='submitAction("DELETE_AFTER")'>DELETE AFTER</button>
+					{% elif action == 'MATCH' %}
+						<button id="ADD" class="menu_button" value="ADD" onclick='submitAction("ADD")'>ADD</button>
+						<button id="MATCH" class="menu_button active" value="MATCH" onclick='submitAction("MATCH")'>MATCH</button>
+						<button id="MOVE" class="menu_button" value="MOVE" onclick='submitAction("MOVE")'>MOVE</button>
+						<button id="DELETE_BEFORE" class="menu_button" value="DELETE_BEFORE" onclick='submitAction("DELETE_BEFORE")'>DELETE BEFORE</button>
+						<button id="DELETE_AFTER" class="menu_button" value="DELETE_AFTER" onclick='submitAction("DELETE_AFTER")'>DELETE AFTER</button>
+					{% elif action == 'DELETE_BEFORE' %}
+						<button id="ADD" class="menu_button" value="ADD" onclick='submitAction("ADD")'>ADD</button>
+						<button id="MATCH" class="menu_button" value="MATCH" onclick='submitAction("MATCH")'>MATCH</button>
+						<button id="MOVE" class="menu_button" value="MOVE" onclick='submitAction("MOVE")'>MOVE</button>
+						<button id="DELETE_BEFORE" class="menu_button active" value="DELETE_BEFORE" onclick='submitAction("DELETE_BEFORE")'>DELETE BEFORE</button>
+						<button id="DELETE_AFTER" class="menu_button" value="DELETE_AFTER" onclick='submitAction("DELETE_AFTER")'>DELETE AFTER</button>
+					{% elif action == 'DELETE_AFTER' %}
+						<button id="ADD" class="menu_button" value="ADD" onclick='submitAction("ADD")'>ADD</button>
+						<button id="MATCH" class="menu_button" value="MATCH" onclick='submitAction("MATCH")'>MATCH</button>
+						<button id="MOVE" class="menu_button" value="MOVE" onclick='submitAction("MOVE")'>MOVE</button>
+						<button id="DELETE_BEFORE" class="menu_button" value="DELETE_BEFORE" onclick='submitAction("DELETE_BEFORE")'>DELETE BEFORE</button>
+						<button id="DELETE_AFTER" class="menu_button active" value="DELETE_AFTER" onclick='submitAction("DELETE_AFTER")'>DELETE AFTER</button>
+					{% elif action == 'MOVE' %}
+						<button id="ADD" class="menu_button" value="ADD" onclick='submitAction("ADD")'>ADD</button>
+						<button id="MATCH" class="menu_button" value="MATCH" onclick='submitAction("MATCH")'>MATCH</button>
+						<button id="MOVE" class="menu_button active" value="MOVE" onclick='submitAction("MOVE")'>MOVE</button>
+						<button id="DELETE_BEFORE" class="menu_button" value="DELETE_BEFORE" onclick='submitAction("DELETE_BEFORE")'>DELETE BEFORE</button>
+						<button id="DELETE_AFTER" class="menu_button" value="DELETE_AFTER" onclick='submitAction("DELETE_AFTER")'>DELETE AFTER</button>
+					{% else %}
+						<button id="ADD" class="menu_button" value="ADD" onclick='submitAction("ADD")'>ADD</button>
+						<button id="MATCH" class="menu_button" value="MATCH" onclick='submitAction("MATCH")'>MATCH</button>
+						<button id="MOVE" class="menu_button" value="MOVE" onclick='submitAction("MOVE")'>MOVE</button>
+						<button id="DELETE_BEFORE" class="menu_button" value="DELETE_BEFORE" onclick='submitAction("DELETE_BEFORE")'>DELETE BEFORE</button>
+						<button id="DELETE_AFTER" class="menu_button" value="DELETE_AFTER" onclick='submitAction("DELETE_AFTER")'>DELETE AFTER</button>
+					{% endif %}
+				</div>
+			</td>
+		</tr>
+	</table>
+
+	<div class="choose_img">
+		<ul class = list_img>
+			{% for file in files %}
+			{% if loop.index > 1 %}
+				<li style= "text-align:center">
+					<img class="img" src="{{url_for('send_image', folder_name = folder_name, file_name = file)}}">
+					{% if file == file_name %}
+						<button class="img_button active" onclick="window.location.href='{{url_for('annotate', folder_name = folder_name, file_name = file, action = 'NULL')}}';">{{file}}</button>
+					{% else %}
+						<button class="img_button" onclick="window.location.href='{{url_for('annotate', folder_name = folder_name, file_name = file, action = 'NULL')}}';">{{file}}</button>
+					{% endif %}
+				</li>
+			{% endif %}
+			{% endfor %}
+		</ul>
+	</div>
+
+	<form id="form" method="POST" action="{{url_for('annotate_select',folder_name = folder_name, file_name = file_name, action = action)}}" style="display: none;">
+		<input id="x" name="x" type="number" value="-1">
+        <input id="y" name="y" type="number" value="-1">
+        <input id="bgPosX_" name="bgPosX_" type="number" value="{{bgPosX_}}">
+        <input id="bgPosY_" name="bgPosY_" type="number" value="{{bgPosY_}}">
+        <input id="bgWidth_" name="bgWidth_" type="number" value="{{bgWidth_}}">
+        <input id="bgHeight_" name="bgHeight_" type="number" value="{{bgHeight_}}">
+        <input id="status" name="status" type="text" value="curr">
+        <input id="action" name="action" type="text" value="{{action}}">
+        <input id="type_submit" name="type_submit" type="text" value="select">
+	</form>
+
+	<div style="display: none;">
+		<input id="bgPosX" type="number" value="{{bgPosX_}}">
+        <input id="bgPosY" type="number" value="{{bgPosY_}}">
+        <input id="bgWidth" type="number" value="{{bgWidth_}}">
+        <input id="bgHeight" type="number" value="{{bgHeight_}}">
+	</div>
+	<button class="menu_button" onclick="window.location.href='{{ url_for( 'choose_folder') }}';">CHOOSE ANOTHER FOLDER</button>
+</body>
+<script type="text/javascript" src="{{ url_for('static',filename='js/wheelzoom.js') }}"></script>
+<script type="text/javascript">
+	var xShift = 0; var yShift = 0;
+	var bgWidth = 0; var imgWidth = 0;
+	function load() 
+	{
+		updateImg("img1");
+		updateImg("img2");
+		
+	    var zoomIn  = -100;
+		var zoomOut = 100;
+
+		images = wheelzoom(document.querySelectorAll('.process_img'), {zoom: 0.1, maxZoom: 10});
+
+		imgWidth = images[0].naturalWidth; bgWidth = Number(document.getElementById("bgWidth_").value);
+		xShift = Number(document.getElementById("bgPosX_").value);
+		yShift = Number(document.getElementById("bgPosY_").value);
+		
+		images[0].addEventListener('wheelzoom.in', function(e) {
+			images[1].doZoomIn();
+			xShift = e.detail.bgPosX; yShift = e.detail.bgPosY;
+			bgWidth = e.detail.bgWidth;
+			document.getElementById("bgPosX_").value = xShift;
+			document.getElementById("bgPosY_").value = yShift;
+			document.getElementById("bgWidth_").value = e.detail.bgWidth;
+			document.getElementById("bgHeight_").value = e.detail.bgHeight;
+		});
+		images[0].addEventListener('wheelzoom.out', function(e) {
+			images[1].doZoomOut();
+			xShift = e.detail.bgPosX; yShift = e.detail.bgPosY;
+			bgWidth = e.detail.bgWidth;
+			document.getElementById("bgPosX_").value = xShift;
+			document.getElementById("bgPosY_").value = yShift;
+			document.getElementById("bgWidth_").value = e.detail.bgWidth;
+			document.getElementById("bgHeight_").value = e.detail.bgHeight;
+		});
+		images[0].addEventListener('wheelzoom.drag', function(e) {
+			images[1].doDrag(e.detail.bgPosX, e.detail.bgPosY);
+			xShift = e.detail.bgPosX; yShift = e.detail.bgPosY;
+			bgWidth = e.detail.bgWidth;
+			document.getElementById("bgPosX_").value = xShift;
+			document.getElementById("bgPosY_").value = yShift;
+			document.getElementById("bgWidth_").value = e.detail.bgWidth;
+			document.getElementById("bgHeight_").value = e.detail.bgHeight;
+		});
+		
+		images[1].addEventListener('wheelzoom.in', function(e) {
+			images[0].doZoomIn();
+			xShift = e.detail.bgPosX; yShift = e.detail.bgPosY;
+			bgWidth = e.detail.bgWidth;
+			document.getElementById("bgPosX_").value = xShift;
+			document.getElementById("bgPosY_").value = yShift;
+			document.getElementById("bgWidth_").value = e.detail.bgWidth;
+			document.getElementById("bgHeight_").value = e.detail.bgHeight;
+		});
+		images[1].addEventListener('wheelzoom.out', function(e) {
+			images[0].doZoomOut();
+			xShift = e.detail.bgPosX; yShift = e.detail.bgPosY;
+			bgWidth = e.detail.bgWidth;
+			document.getElementById("bgPosX_").value = xShift;
+			document.getElementById("bgPosY_").value = yShift;
+			document.getElementById("bgWidth_").value = e.detail.bgWidth;
+			document.getElementById("bgHeight_").value = e.detail.bgHeight;
+		});
+		images[1].addEventListener('wheelzoom.drag', function(e) {
+			images[0].doDrag(e.detail.bgPosX, e.detail.bgPosY);
+			xShift = e.detail.bgPosX; yShift = e.detail.bgPosY;
+			bgWidth = e.detail.bgWidth;
+			document.getElementById("bgPosX_").value = xShift;
+			document.getElementById("bgPosY_").value = yShift;
+			document.getElementById("bgWidth_").value = e.detail.bgWidth;
+			document.getElementById("bgHeight_").value = e.detail.bgHeight;
+		});
+		if ("{{action}}" != "NULL")
+		{
+			images[1].addEventListener("dblclick", function (e) { 
+				getCursorPosition(images[1], e);
+				document.getElementById("status").value = "curr";
+				document.getElementsByTagName('form')[0].submit();
+			});
+			if ("{{action}}" == "MATCH" && "{{file_name}}" != "1.jpg")
+			{
+				images[0].addEventListener("dblclick", function (e) { 
+					getCursorPosition(images[0], e);
+					document.getElementById("status").value = "pre";
+					document.getElementsByTagName('form')[0].submit();
+				});
+			}	
+		}
+	}
+
+	function getCursorPosition(image, event) {
+	    const rect = image.getBoundingClientRect();
+	    const xc = event.clientX - rect.left;
+	    const yc = event.clientY - rect.top;
+	    var scale = imgWidth/bgWidth;
+	    var x = (xc - xShift)*scale;
+	    var y = (yc - yShift)*scale;
+	    document.getElementById("x").value = Math.round(x);
+        document.getElementById("y").value = Math.round(y);
+	}
+
+	function submitAction(action)
+	{
+		document.getElementById("action").value = action;
+		document.getElementById("type_submit").value = "action";
+		document.getElementsByTagName('form')[0].submit();
+	}
+
+	function updateImg(id_) {
+	    var source = document.getElementById(id_).src,
+	        timestamp = (new Date()).getTime(),
+	        newUrl = source + '?_=' + timestamp;
+	    document.getElementById(id_).src = newUrl;
+	}
+</script>
+</html>
